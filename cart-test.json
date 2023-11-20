@@ -2,7 +2,7 @@
   "cartId": "cart-id",
   "shopperId": "shopper-id",
   "date": "2021-10-06T18:35:42.000Z",
-  "totalAti": 99.80,
+  "totalAti": 99.8,
   "promoCode": "voucher-42",
   "products": [
     {
@@ -14,8 +14,8 @@
     {
       "productId": "3099873045369",
       "quantity": 2,
-      "unitPriceAti": 24.90,
-      "totalPriceAti": 49.80
+      "unitPriceAti": 24.9,
+      "totalPriceAti": 49.8
     }
   ]
 }
