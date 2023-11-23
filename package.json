@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js ./cart-test.json ./criteria-test.json",
+    "start2": "node index.js ./cart-test2.json ./criteria-test2.json",
     "test": "mocha"
   },
   "keywords": [],
@@ -13,5 +14,8 @@
   "devDependencies": {
     "mocha": "^9.1.2",
     "should": "^13.2.3"
+  },
+  "dependencies": {
+    "nodemon": "^3.0.1"
   }
 }
