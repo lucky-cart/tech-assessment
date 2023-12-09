@@ -1,4 +1,8 @@
 class EligibilityService {
+  #isConditionFulfilled(object, path, condition) {
+    return true;
+  }
+
   /**
    * Compare cart data with criteria to compute eligibility.
    * If all criteria are fulfilled then the cart is eligible (return true).
@@ -8,8 +12,9 @@ class EligibilityService {
    * @return {boolean}
    */
   isEligible(cart, criteria) {
-    // TODO: compute cart eligibility here.
-    return false;
+    return Object.entries(criteria).every(([key, condition]) =>
+      this.#isConditionFulfilled(cart, key.split("."), condition)
+    );
   }
 }
 
