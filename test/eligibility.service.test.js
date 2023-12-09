@@ -357,5 +357,67 @@ describe('Eligibility', () => {
       const actualEligibility = eligibilityService.isEligible(cart, criteria);
       should(actualEligibility).be.false();
     });
+
+    it('should handle multiple nested schemas', () => {
+      const cart = {
+        "cartId": "cart-id",
+        "shopperId": "shopper-id",
+        "date": "2021-10-06T18:35:42.000Z",
+        "totalAti": 99.80,
+        "promoCode": "voucher-42",
+        "products": [
+          {
+            "productId": "5449000054227",
+            "quantity": 20,
+            "unitPriceAti": 2.5,
+            "totalPriceAti": 50,
+            "tags": [
+              { label: "red", value: "#FF0000" },
+              { label: "green", value: "#00FF00" },
+              { label: "blue", value: "#0000FF" },
+            ]
+          },
+          {
+            "productId": "3099873045369",
+            "quantity": 2,
+            "unitPriceAti": 24.90,
+            "totalPriceAti": 49.80,
+            "tags": [
+              { label: "blue", value: "#0000FF" },
+              { label: "yellow", value: "#FFFF00" },
+            ]
+          }
+        ],
+        "shop": {
+          "name": "U Express - Paris Lafayette",
+          "brand": {
+            "name": "U Express",
+            "group": {
+              "name": "Système U"
+            }
+          }
+        }
+      }
+      const criteria = {
+        "shopperId": "shopper-id",
+        "totalAti": {
+          "gt": 50
+        },
+        "products.productId": {
+          "in": ["5449000054227"]
+        },
+        "date": {
+          "and": {
+            "gt": "2021-01-01T00:00:00.000Z",
+            "lt": "2021-12-31T23:59:59.000Z"
+          }
+        },
+        "shop.brand.group.name": "Système U",
+        "products.tags.label": "yellow"
+      };
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, criteria);
+      should(actualEligibility).be.true();
+    });
   });
 });
