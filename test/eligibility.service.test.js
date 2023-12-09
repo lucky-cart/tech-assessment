@@ -211,7 +211,7 @@ describe('Eligibility', () => {
   describe('And condition', () => {
     it('should not be eligible when and condition is not fulfilled (none)', () => {
       const cart = {total: 0};
-      const criteria = {total: {and: {gt: 10, gt: 20}}};
+      const criteria = {total: {and: {gt: 10, gt: 20}}}; // This gives { gt: 20 }. The 'and' an 'or' operators could take an array instead of an object
       const eligibilityService = new EligibilityService();
       const actualEligibility = eligibilityService.isEligible(cart, criteria);
       should(actualEligibility).be.false();
@@ -306,7 +306,7 @@ describe('Eligibility', () => {
       const actualEligibility = eligibilityService.isEligible(cart, criteria);
       should(actualEligibility).be.true();
     });
-    it('should be eligible when array sub object condition with two elements is not fulfilled', () => {
+    it('should not be eligible when array sub object condition with two elements is not fulfilled', () => {
       const cart = {products:[{quantity:1}, {quantity: 2}]};
       const criteria = {'products.quantity': 3};
       const eligibilityService = new EligibilityService();

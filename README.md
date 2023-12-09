@@ -54,8 +54,8 @@ Available condition types:
 - Basic condition (eg: `total: 20`) matches when `total == 20`;
 - `gt`, `lt`, `gte`, `lte` matches respectively when cart value is greater, lower, greater or equal, lower or equal;
 - `in` (followed by an array) matches when at least one of the cart values is in the following array;
-- `and` (follower by at least two conditions) matches when every following conditions match;
-- `or` (follower by at least two conditions) matches when at least one of the following conditions matches.
+- `and` (followed by at least two conditions) matches when every following conditions match;
+- `or` (followed by at least two conditions) matches when at least one of the following conditions matches.
 
 ⚠️ Conditions are typeless! `{ total: 20 }` matches `{ total: "20" }` and `{ total: 20.0 }`.
 
