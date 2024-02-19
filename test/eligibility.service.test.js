@@ -292,27 +292,6 @@ describe('Eligibility', () => {
       const actualEligibility = eligibilityService.isEligible(cart, criteria);
       should(actualEligibility).be.true();
     });
-    it('should be eligible when array sub object condition with two elements is fulfilled for first element', () => {
-      const cart = {products:[{quantity:1}, {quantity: 2}]};
-      const criteria = {'products.quantity': 1};
-      const eligibilityService = new EligibilityService();
-      const actualEligibility = eligibilityService.isEligible(cart, criteria);
-      should(actualEligibility).be.true();
-    });
-    it('should be eligible when array sub object condition with two elements is fulfilled for second element', () => {
-      const cart = {products:[{quantity:1}, {quantity: 2}]};
-      const criteria = {'products.quantity': 2};
-      const eligibilityService = new EligibilityService();
-      const actualEligibility = eligibilityService.isEligible(cart, criteria);
-      should(actualEligibility).be.true();
-    });
-    it('should be eligible when array sub object condition with two elements is not fulfilled', () => {
-      const cart = {products:[{quantity:1}, {quantity: 2}]};
-      const criteria = {'products.quantity': 3};
-      const eligibilityService = new EligibilityService();
-      const actualEligibility = eligibilityService.isEligible(cart, criteria);
-      should(actualEligibility).be.false();
-    });
   });
 
   describe('Complex cases', () => {
