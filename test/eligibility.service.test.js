@@ -1,4 +1,4 @@
-const {EligibilityService} = require('../src/eligibility.service');
+const {EligibilityService} = require('../src/services/eligibility.service');
 const should = require('should');
 
 describe('Eligibility', () => {

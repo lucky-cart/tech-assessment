@@ -6,7 +6,7 @@ In this assessment, you have to calculate cart eligibility to a campaign. To do 
 
 1. Read this entire documentation
 2. Clone this repository
-3. Open [src/eligibility.service.js](./src/eligibility.service.js) file and edit `isEligible(cart, criteria)` method.
+3. Open [src/eligibility.service.js](src/services/eligibility.service.js) file and edit `isEligible(cart, criteria)` method.
 4. Run `npm start` or `node index.js ./cart-test.json ./criteria-test.json` to check results
 5. You can edit [cart-test.json](./cart-test.json) or [criteria-test.json](./criteria-test.json) for more tests.
 
