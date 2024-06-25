@@ -41,7 +41,7 @@ class EligibilityService {
   }
 
   isEligibleCondition(cartValue, condition) {
-    console.log({ cartValue, condition });
+    // console.log({ cartValue, condition });
 
     if (typeof condition === "object" && condition !== null) {
       // gt, lt, gte, lte, in, and, or
@@ -63,14 +63,22 @@ class EligibilityService {
           case "in":
             if (!conditionValue.includes(cartValue)) return false;
             break;
-          // TODO: recursive call
-          // case "and":
-          //   break;
-          // case "or":
-          //   break;
+          case "and":
+            // conditionValue is an Object
+            // { cartValue: 0, conditionValue: { gt: 20 } }
+            // { cartValue: 30, conditionValue: { gt: 10, lt: 20 } }
+            return Object.keys(conditionValue).every((v) =>
+              this.isEligibleCondition(cartValue, { [v]: conditionValue[v] })
+            );
+          case "or":
+            return Object.keys(conditionValue).some((v) =>
+              this.isEligibleCondition(cartValue, { [v]: conditionValue[v] })
+            );
           default:
-            return false;
+            throw new Error(`Unknown condition: ${key}`);
         }
+        // No condition failed
+        return true;
       }
     } else {
       // Basic condition
