@@ -8,8 +8,87 @@ class EligibilityService {
    * @return {boolean}
    */
   isEligible(cart, criteria) {
-    // TODO: compute cart eligibility here.
-    return false;
+    for (const key in criteria) {
+      const cartValue = this.getCartValue(cart, key);
+
+      if (cartValue === null) {
+        // Condition key not found in cart
+        return false;
+      }
+
+      const condition = criteria[key];
+
+      if (Array.isArray(cartValue)) {
+        const isEligible = cartValue.some((value) =>
+          this.isEligibleCondition(value, condition)
+        );
+        if (!isEligible) return false;
+      } else {
+        if (!this.isEligibleCondition(cartValue, condition)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  getCartValue(cart, key) {
+    const keys = key.split(".");
+
+    let value = cart;
+
+    for (const key of keys) {
+      if (Array.isArray(value)) {
+        value = value.map((item) => item[key]);
+      } else if (typeof value === "object" && value !== null) {
+        value = value[key];
+      } else {
+        return null;
+      }
+    }
+
+    return value;
+  }
+
+  isEligibleCondition(cartValue, condition) {
+    if (typeof condition === "object" && condition !== null) {
+      for (const key in condition) {
+        const conditionValue = condition[key];
+        switch (key) {
+          case "gt":
+            if (cartValue <= conditionValue) return false;
+            break;
+          case "lt":
+            if (cartValue >= conditionValue) return false;
+            break;
+          case "gte":
+            if (cartValue < conditionValue) return false;
+            break;
+          case "lte":
+            if (cartValue > conditionValue) return false;
+            break;
+          case "in":
+            if (!conditionValue.includes(cartValue)) return false;
+            break;
+          case "and":
+            return Object.keys(conditionValue).every((v) =>
+              this.isEligibleCondition(cartValue, { [v]: conditionValue[v] })
+            );
+          case "or":
+            return Object.keys(conditionValue).some((v) =>
+              this.isEligibleCondition(cartValue, { [v]: conditionValue[v] })
+            );
+          default:
+            throw new Error(`Unknown condition: ${key}`);
+        }
+        // No condition failed
+        return true;
+      }
+    } else {
+      // Basic condition
+      return cartValue == condition;
+    }
   }
 }
 
