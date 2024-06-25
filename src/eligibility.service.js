@@ -18,8 +18,15 @@ class EligibilityService {
 
       const condition = criteria[key];
 
-      if (!this.isEligibleCondition(cartValue, condition)) {
-        return false;
+      if (Array.isArray(cartValue)) {
+        const isEligible = cartValue.some((value) =>
+          this.isEligibleCondition(value, condition)
+        );
+        if (!isEligible) return false;
+      } else {
+        if (!this.isEligibleCondition(cartValue, condition)) {
+          return false;
+        }
       }
     }
 
