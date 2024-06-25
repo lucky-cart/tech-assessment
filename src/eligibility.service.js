@@ -52,10 +52,7 @@ class EligibilityService {
   }
 
   isEligibleCondition(cartValue, condition) {
-    // console.log({ cartValue, condition });
-
     if (typeof condition === "object" && condition !== null) {
-      // gt, lt, gte, lte, in, and, or
       for (const key in condition) {
         const conditionValue = condition[key];
         switch (key) {
@@ -75,9 +72,6 @@ class EligibilityService {
             if (!conditionValue.includes(cartValue)) return false;
             break;
           case "and":
-            // conditionValue is an Object
-            // { cartValue: 0, conditionValue: { gt: 20 } }
-            // { cartValue: 30, conditionValue: { gt: 10, lt: 20 } }
             return Object.keys(conditionValue).every((v) =>
               this.isEligibleCondition(cartValue, { [v]: conditionValue[v] })
             );
