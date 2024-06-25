@@ -11,6 +11,11 @@ class EligibilityService {
     for (const key in criteria) {
       const cartValue = this.getCartValue(cart, key);
 
+      if (cartValue === null) {
+        // Condition key not found in cart
+        return false;
+      }
+
       const condition = criteria[key];
 
       if (!this.isEligibleCondition(cartValue, condition)) {
@@ -32,8 +37,7 @@ class EligibilityService {
       } else if (typeof value === "object" && value !== null) {
         value = value[key];
       } else {
-        throw new Error("Should not happen ?");
-        // TODO: ensure should not happen =)
+        return null;
       }
     }
 
