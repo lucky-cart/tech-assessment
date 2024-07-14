@@ -15,40 +15,21 @@ class EligibilityService {
    * @return {boolean}
    */
   isEligible(cart, criteria) {
-    const results = [];
-    for (const [key, unitCriteria] of Object.entries(criteria)) {
-      let isEligible = false;
-
+    return Object.entries(criteria).every(([key, unitCriteria]) => {
+      const [parent, prop] = key.split(".");
       // Consider falsy-wrong (i.e: 0 (number))
       if (!["undefined", "null"].includes(typeof cart[key])) {
-        const isEligible = this.assert(cart[key], unitCriteria);
-        results.push(isEligible);
-        continue;
+        return this.assert(cart[key], unitCriteria);
+      } else if (parent && prop) {
+        if (cart[parent]) {
+          const data = Array.isArray(cart[parent])
+            ? cart[parent]
+            : [cart[parent]];
+
+          return this.assertNested(data, { key, condition: unitCriteria });
+        }
       }
-      // We specifically target `products.` as trying to make the case generic is irrelevant in this assessment context
-      // Product seems to be the only data with sub-data
-      else if (
-        key.startsWith("products.") &&
-        cart.products &&
-        (Array.isArray(cart.products) || Object.keys(cart.products).length)
-      ) {
-        // Simplify the process by normalizing the data and treat all cases
-        const products = Array.isArray(cart.products)
-          ? cart.products
-          : [cart.products];
-
-        isEligible = this.assertProduct(products, {
-          key,
-          condition: unitCriteria,
-        });
-
-        results.push(isEligible);
-        continue;
-      }
-      results.push(isEligible);
-    }
-
-    return results.every((t) => t);
+    });
   }
 
   assert(data, criteria) {
@@ -66,37 +47,34 @@ class EligibilityService {
     return false;
   }
 
-  assertProduct(products, criteria) {
-    const prop = criteria.key.split(".").pop();
-    const { some, every } = Array.prototype;
-    const iterationFn = products.length === 1 ? every : some;
+  assertNested(products, criteria) {
+    const [parent, prop] = criteria.key.split(".");
+    const iterationFn =
+      products.length > 1 ? Array.prototype.some : Array.prototype.every;
 
     if (typeof criteria.condition === "string") {
-      return iterationFn.call(products, (product) => {
-        return product[prop] && product[prop] === criteria.condition;
-      });
+      return iterationFn.call(
+        products,
+        (product) => product[prop] && product[prop] === criteria.condition
+      );
     } else if (typeof criteria.condition === "number") {
-      return iterationFn.call(products, (product) => {
-        return (
+      return iterationFn.call(
+        products,
+        (product) =>
           product[prop] &&
           parseFloat(product[prop]) === parseFloat(criteria.condition)
-        );
-      });
+      );
     } else if (!Array.isArray(criteria) && typeof criteria === "object") {
       return iterationFn.call(products, (product) =>
         this.assertConditional(product[prop], criteria.condition)
       );
     }
-    return false;
   }
-
   // ################################ //
 
   assertMathOpe(ope, left, right) {
-    left = typeof left === "string" ? `"${left}"` : left;
-    right = typeof right === "string" ? `"${right}"` : right;
     // eval is safe in our context, ONLY BECAUSE we master input
-    return eval(`${left} ${this.mathOpeMap[ope]} ${right}`);
+    return eval(`"${left}" ${this.mathOpeMap[ope]} "${right}"`);
   }
 
   assertConditional(value, criteria) {

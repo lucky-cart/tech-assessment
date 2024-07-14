@@ -1,4 +1,4 @@
-# Lucky Cart – Technical Assessment
+# LC – Technical Assessment
 
 In this assessment, you have to calculate cart eligibility to a campaign. To do so, you have to compare criteria with cart data.
 
