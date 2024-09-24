@@ -1,3 +1,6 @@
+const { getValue } = require('./helpers');
+const validateCondition = require('./validate-condition');
+
 class EligibilityService {
   /**
    * Compare cart data with criteria to compute eligibility.
@@ -8,8 +11,10 @@ class EligibilityService {
    * @return {boolean}
    */
   isEligible(cart, criteria) {
-    // TODO: compute cart eligibility here.
-    return false;
+    return Object.entries(criteria).every(([key, condition]) => {
+      const value = getValue(key, cart);
+      return validateCondition(condition, value);
+    });
   }
 }
 
