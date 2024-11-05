@@ -1,21 +1,21 @@
 {
-  "cartId": "cart-id",
-  "shopperId": "shopper-id",
-  "date": "2021-10-06T18:35:42.000Z",
-  "totalAti": 99.80,
-  "promoCode": "voucher-42",
+  "cartId": "cart-123",
+  "shopperId": "customer-abc",
+  "date": "2022-06-15T12:00:00.000Z",
+  "totalAti": 149.5,
+  "promoCode": "SUMMERSALE",
   "products": [
     {
-      "productId": "5449000054227",
-      "quantity": 20,
-      "unitPriceAti": 2.5,
-      "totalPriceAti": 50
+      "productId": "P0001",
+      "quantity": 10,
+      "unitPriceAti": 5.99,
+      "totalPriceAti": 59.9
     },
     {
-      "productId": "3099873045369",
-      "quantity": 2,
-      "unitPriceAti": 24.90,
-      "totalPriceAti": 49.80
+      "productId": "P0002",
+      "quantity": 5,
+      "unitPriceAti": 17.92,
+      "totalPriceAti": 89.6
     }
   ]
 }
