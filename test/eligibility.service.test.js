@@ -358,4 +358,79 @@ describe('Eligibility', () => {
       should(actualEligibility).be.false();
     });
   });
+
+
+  describe('Error Handling', () => {
+    it('should throw an error when cart is null', () => {
+      const eligibilityService = new EligibilityService();
+      should(() => eligibilityService.isEligible(null, { total: { gt: 10 } }))
+        .throw('Invalid cart or criteria');
+    });
+
+    it('should throw an error when criteria is null', () => {
+      const eligibilityService = new EligibilityService();
+      should(() => eligibilityService.isEligible({ total: 20 }, null))
+        .throw('Invalid cart or criteria');
+    });
+
+    it('should throw an error when cart is not an object', () => {
+      const eligibilityService = new EligibilityService();
+      should(() => eligibilityService.isEligible(42, { total: { gt: 10 } }))
+        .throw('Invalid cart or criteria');
+    });
+
+    it('should throw an error when criteria is not an object', () => {
+      const eligibilityService = new EligibilityService();
+      should(() => eligibilityService.isEligible({ total: 20 }, 42))
+        .throw('Invalid cart or criteria');
+    });
+
+    it('should not throw an error for valid cart and criteria', () => {
+      const eligibilityService = new EligibilityService();
+      should(() => eligibilityService.isEligible({ total: 20 }, { total: { gt: 10 } })).not.throw();
+    });
+  });
+
+  describe('Handling Missing Values Gracefully', () => {
+    it('should return false when a non-existing key is checked', () => {
+      const cart = {};
+      const criteria = { nonExistentKey: { gt: 10 } };
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, criteria);
+      should(actualEligibility).be.false();
+    });
+
+    it('should return false when a nested key does not exist', () => {
+      const cart = { products: {} };
+      const criteria = { 'products.price': { gt: 10 } };
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, criteria);
+      should(actualEligibility).be.false();
+    });
+
+    it('should return false when accessing a deep nested key that is missing', () => {
+      const cart = { user: { details: {} } };
+      const criteria = { 'user.details.age': { gt: 18 } };
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, criteria);
+      should(actualEligibility).be.false();
+    });
+
+    it('should return false when checking an array field that does not exist', () => {
+      const cart = { products: [] };
+      const criteria = { 'products.price': { gt: 10 } };
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, criteria);
+      should(actualEligibility).be.false();
+    });
+
+    it('should return false when accessing an undefined field within an array', () => {
+      const cart = { products: [{ name: 'item1' }] };
+      const criteria = { 'products.price': { gt: 10 } };
+      const eligibilityService = new EligibilityService();
+      const actualEligibility = eligibilityService.isEligible(cart, criteria);
+      should(actualEligibility).be.false();
+    });
+  });
+
 });
